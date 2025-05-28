@@ -2,105 +2,309 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WTF Kima</title>
   <style>
-    * { box-sizing: border-box; }
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap');
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
     body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Arial', sans-serif;
-      background: #ffe6f0;
-      height: 100vh;
+      background-color: #ffe6f0;
+      font-family: 'Fredoka', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: start;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
       overflow: hidden;
-      position: relative;
-    }
-
-    h1 {
-      margin: 40px 20px 20px;
-      font-size: 1.6rem;
       text-align: center;
+      padding: 20px;
     }
-
+    h1 {
+      font-size: 6vw;
+      margin-bottom: 30px;
+      line-height: 1.3;
+    }
     .btn-container {
       position: relative;
       width: 100%;
-      max-width: 320px;
-      height: 200px;
+      max-width: 360px;
+      height: 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-
     button {
-      position: absolute;
-      padding: 12px 24px;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
+      padding: 12px 20px;
       border: none;
       border-radius: 10px;
       cursor: pointer;
-      transition: 0.3s ease;
+      transition: all 0.3s ease;
     }
-
     #yes-btn {
       background-color: #ff66b2;
       color: white;
-      left: 30px;
-      top: 100px;
       z-index: 1;
     }
-
     #no-btn {
-      background-color: #ccc;
+      background-color: #cccccc;
       color: black;
-      left: 170px;
-      top: 100px;
+      position: absolute;
       z-index: 2;
+    }
+    #celebration-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      width: 100vw;
+      background-color: #fff0f5;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 999;
+      padding: 20px;
+      overflow: hidden;
+    }
+    #celebration-message {
+      font-size: 6vw;
+      color: #ff3399;
+      margin: 20px 0 10px;
+    }
+    #small-text {
+      font-size: 4vw;
+      color: #aa3377;
+      margin-bottom: 20px;
+    }
+    #balloons-container {
+      position: relative;
+      height: 40vh;
+      width: 100%;
+    }
+    .balloon {
+      width: 30px;
+      height: 40px;
+      background-color: #ff69b4;
+      border-radius: 50%;
+      position: absolute;
+      animation: float 6s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh); opacity: 0; }
+    }
+    #fireworks-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 40vh;
+      pointer-events: none;
+    }
+    #password-section {
+      margin-top: 20px;
+    }
+    #password-input {
+      font-size: 1.1rem;
+      padding: 8px;
+      border-radius: 8px;
+      border: 2px solid #ff66b2;
+      width: 80vw;
+      max-width: 250px;
+    }
+    #submit-password {
+      font-size: 1rem;
+      margin-top: 10px;
+      padding: 8px 15px;
+      background-color: #ff66b2;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+    }
+    #card {
+      display: none;
+      background-color: white;
+      border-radius: 20px;
+      padding: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      max-width: 90vw;
+      text-align: center;
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
-  <h1>¿Me perdonas?</h1>
+  <h1>WTF qué traes Kima 😭<br>¿Me perdonas?</h1>
   <div class="btn-container">
     <button id="yes-btn">Sí</button>
-    <button id="no-btn">No</button>
+    <button id="no-btn" style="left: 60%; top: 50%;">No</button>
+  </div>
+
+  <div id="celebration-screen">
+    <div id="balloons-container"></div>
+    <canvas id="fireworks-canvas"></canvas>
+    <div id="celebration-message">¡Sabía que me querías! 💘</div>
+    <div id="small-text">Ingresa la contraseña para desbloquear una cartita muy especial.</div>
+    <div id="password-section">
+      <input type="password" id="password-input" placeholder="Contraseña secreta" />
+      <button id="submit-password">Enviar</button>
+    </div>
+    <div id="card">
+      <h2>Mi cartita para ti 💌</h2>
+      <p>Hola, ¿vemos Netflix y nos relajamos? No es cierto AJAJAJA... Solo quería decirte que de verdad no tienes ni la menor idea de cuánto me gustas, también te adoro mucho. Desde que te conocí me has dado mucho amor y alegría... No sé qué hice para merecerte y estaré contigo hasta que me eches a madrazos de tu vida... Te quiero mucho.</p>
+    </div>
   </div>
 
   <script>
-    const noBtn = document.getElementById("no-btn");
     const yesBtn = document.getElementById("yes-btn");
-    const container = document.querySelector(".btn-container");
+    const noBtn = document.getElementById("no-btn");
+    const celebrationScreen = document.getElementById("celebration-screen");
+    const balloonsContainer = document.getElementById("balloons-container");
+    const card = document.getElementById("card");
+    const passwordInput = document.getElementById("password-input");
+    const submitPassword = document.getElementById("submit-password");
+    const fireworksCanvas = document.getElementById("fireworks-canvas");
+    const ctx = fireworksCanvas.getContext("2d");
 
     function moveNoButton() {
-      const padding = 20;
-      const maxX = container.clientWidth - noBtn.offsetWidth - padding;
-      const maxY = container.clientHeight - noBtn.offsetHeight - padding;
-
-      let newX, newY, tries = 0;
-
+      const yesRect = yesBtn.getBoundingClientRect();
+      const padding = 10;
+      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+      let x, y;
       do {
-        newX = Math.random() * maxX;
-        newY = Math.random() * maxY;
-        tries++;
+        x = Math.random() * maxX;
+        y = Math.random() * maxY;
       } while (
-        tries < 20 &&
-        Math.abs(newX - yesBtn.offsetLeft) < 60 &&
-        Math.abs(newY - yesBtn.offsetTop) < 60
+        x > yesRect.left - noBtn.offsetWidth &&
+        x < yesRect.right &&
+        y > yesRect.top - noBtn.offsetHeight &&
+        y < yesRect.bottom
       );
-
-      noBtn.style.left = `${newX}px`;
-      noBtn.style.top = `${newY}px`;
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
     }
 
-    // Para escritorio
-    noBtn.addEventListener("mouseenter", moveNoButton);
-
-    // Para móvil (touch)
-    noBtn.addEventListener("touchstart", function (e) {
-      e.preventDefault(); // Evita el click accidental
+    noBtn.addEventListener("mouseover", moveNoButton);
+    noBtn.addEventListener("touchstart", e => {
+      e.preventDefault();
       moveNoButton();
+    }, { passive: false });
+
+    yesBtn.addEventListener("click", () => {
+      document.body.innerHTML = "";
+      document.body.appendChild(celebrationScreen);
+      celebrationScreen.style.display = "flex";
+      startCelebration();
     });
+
+    submitPassword.addEventListener("click", () => {
+      const pw = passwordInput.value.trim();
+      if (pw === "120605051003") {
+        card.style.display = "block";
+        submitPassword.disabled = true;
+        passwordInput.disabled = true;
+      } else {
+        alert("Contraseña incorrecta.");
+      }
+      passwordInput.value = "";
+    });
+
+    function resizeCanvas() {
+      fireworksCanvas.width = window.innerWidth;
+      fireworksCanvas.height = window.innerHeight * 0.4;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    class Firework {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.particles = [];
+        this.createParticles();
+      }
+      createParticles() {
+        for (let i = 0; i < 30; i++) {
+          const angle = (Math.PI * 2 / 30) * i;
+          const speed = Math.random() * 4 + 2;
+          this.particles.push({
+            x: this.x,
+            y: this.y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            alpha: 1,
+            radius: 2 + Math.random() * 2,
+          });
+        }
+      }
+      update() {
+        this.particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.alpha -= 0.02;
+        });
+      }
+      draw(ctx) {
+        this.particles.forEach(p => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${this.color},${p.alpha})`;
+          ctx.fill();
+        });
+      }
+      isDead() {
+        return this.particles.every(p => p.alpha <= 0);
+      }
+    }
+
+    let fireworks = [];
+
+    function launchFirework() {
+      const x = Math.random() * fireworksCanvas.width;
+      const y = Math.random() * fireworksCanvas.height * 0.7;
+      const r = Math.floor(Math.random() * 255);
+      const g = Math.floor(Math.random() * 100);
+      const b = Math.floor(Math.random() * 255);
+      fireworks.push(new Firework(x, y, `${r},${g},${b}`));
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+      fireworks.forEach((fw, i) => {
+        fw.update();
+        fw.draw(ctx);
+        if (fw.isDead()) fireworks.splice(i, 1);
+      });
+      requestAnimationFrame(animate);
+    }
+
+    function createBalloon() {
+      const balloon = document.createElement("div");
+      balloon.className = "balloon";
+      balloon.style.left = Math.random() * 100 + "vw";
+      balloon.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 70%)`;
+      balloon.style.animationDelay = (Math.random() * 3) + "s";
+      balloonsContainer.appendChild(balloon);
+      setTimeout(() => balloon.remove(), 6000);
+    }
+
+    function startCelebration() {
+      balloonsContainer.innerHTML = "";
+      for (let i = 0; i < 15; i++) {
+        setTimeout(createBalloon, i * 400);
+        setTimeout(launchFirework, i * 400);
+      }
+      animate();
+    }
   </script>
 </body>
 </html>
