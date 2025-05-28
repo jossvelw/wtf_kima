@@ -162,7 +162,7 @@
 
   <div id="card">
     <h2>Mi cartita para ti 💌</h2>
-    <p>Eres la persona que alegra mis días, incluso cuando no sabes que lo haces. Gracias por estar. 💖</p>
+    <p>hola vemos netflix y nos relajamos? no es cierto AJAJAJA...<br><br>Solo queria decirte que de verdad no tienes ni la menor idea de cuanto me gustas, tambien te adoro mucho desde que te conoci me has dado mucho amor y alegria... no se que hice para merecerte y estare contigo hasta que me eches a madrazos dde tu vida... Te quiero mucho</p>
   </div>
 
   <div id="blocked-message" style="display:none;">
@@ -171,7 +171,6 @@
 </div>
 
 <script>
-  // Globally used elements
   const yesBtn = document.getElementById("yes-btn");
   const noBtn = document.getElementById("no-btn");
   const celebrationScreen = document.getElementById("celebration-screen");
@@ -183,7 +182,6 @@
   const fireworksCanvas = document.getElementById("fireworks-canvas");
   const ctx = fireworksCanvas.getContext("2d");
 
-  // Setup fireworks canvas size
   function resizeCanvas() {
     fireworksCanvas.width = window.innerWidth;
     fireworksCanvas.height = window.innerHeight * 0.5;
@@ -191,7 +189,6 @@
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
-  // Fireworks implementation (simple)
   class Firework {
     constructor(x, y, color) {
       this.x = x;
@@ -261,7 +258,6 @@
     requestAnimationFrame(animate);
   }
 
-  // Balloons floating animation
   function createBalloon() {
     const balloon = document.createElement("div");
     balloon.className = "balloon";
@@ -280,13 +276,11 @@
     animate();
   }
 
-  // Password logic
   let attempts = 0;
 
   function isBlocked() {
     const blockedUntil = localStorage.getItem('blockedUntil');
-    if (!blockedUntil) return false;
-    return new Date().getTime() < parseInt(blockedUntil);
+    return blockedUntil && new Date().getTime() < parseInt(blockedUntil);
   }
 
   function blockFor2Hours() {
@@ -299,7 +293,6 @@
       alert("Lo siento, agotaste tus intentos. Intenta de nuevo en 2 horas.");
       return;
     }
-    // Mostrar pantalla celebración
     document.body.innerHTML = "";
     document.body.appendChild(celebrationScreen);
     celebrationScreen.style.display = "flex";
@@ -312,11 +305,7 @@
       return;
     }
     const pw = passwordInput.value.trim().toLowerCase();
-    if(pw === "") {
-      alert("Por favor ingresa la contraseña.");
-      return;
-    }
-    if (pw === "120603051003") {
+    if (pw === "120605051003") {
       card.style.display = "block";
       blockedMessage.style.display = "none";
       submitPassword.disabled = true;
@@ -337,13 +326,19 @@
     passwordInput.focus();
   });
 
-  // No button moves randomly but stays visible on screen
   noBtn.addEventListener("mouseover", () => {
     const padding = 40;
-    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-    const maxY = window.innerHeight - noBtn.offsetHeight - padding - 30;
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
+    const yesRect = yesBtn.getBoundingClientRect();
+    let x, y;
+    let overlap;
+    do {
+      x = Math.random() * (window.innerWidth - noBtn.offsetWidth - padding);
+      y = Math.random() * (window.innerHeight - noBtn.offsetHeight - padding - 30);
+      overlap = !(x + noBtn.offsetWidth < yesRect.left ||
+                  x > yesRect.right ||
+                  y + noBtn.offsetHeight < yesRect.top ||
+                  y > yesRect.bottom);
+    } while (overlap);
     noBtn.style.left = `${x}px`;
     noBtn.style.top = `${y}px`;
   });
