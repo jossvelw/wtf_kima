@@ -2,51 +2,61 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WTF Kima</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: 'Fredoka', sans-serif;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
       background: #ffe6f0;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 640px;
-      width: 360px;
+      justify-content: start;
       overflow: hidden;
       position: relative;
-      border: 2px solid #ccc;
     }
+
     h1 {
+      margin: 40px 20px 20px;
+      font-size: 1.6rem;
       text-align: center;
-      padding: 10px;
     }
+
     .btn-container {
       position: relative;
-      width: 320px;
-      height: 60px;
-      margin-top: 20px;
+      width: 100%;
+      max-width: 320px;
+      height: 200px;
     }
+
     button {
       position: absolute;
-      padding: 10px 20px;
+      padding: 12px 24px;
       font-size: 1.2rem;
       border: none;
       border-radius: 10px;
       cursor: pointer;
       transition: 0.3s ease;
     }
+
     #yes-btn {
-      left: 0;
       background-color: #ff66b2;
       color: white;
+      left: 30px;
+      top: 100px;
+      z-index: 1;
     }
+
     #no-btn {
-      left: 160px;
       background-color: #ccc;
       color: black;
+      left: 170px;
+      top: 100px;
+      z-index: 2;
     }
   </style>
 </head>
@@ -59,31 +69,37 @@
 
   <script>
     const noBtn = document.getElementById("no-btn");
-    const container = document.body;
+    const yesBtn = document.getElementById("yes-btn");
+    const container = document.querySelector(".btn-container");
 
-    noBtn.addEventListener("mouseenter", () => {
-      const margin = 10;
-      const maxWidth = container.clientWidth;
-      const maxHeight = container.clientHeight;
-      const btnWidth = noBtn.offsetWidth;
-      const btnHeight = noBtn.offsetHeight;
-
-      const maxX = maxWidth - btnWidth - margin;
-      const maxY = maxHeight - btnHeight - margin;
+    function moveNoButton() {
+      const padding = 20;
+      const maxX = container.clientWidth - noBtn.offsetWidth - padding;
+      const maxY = container.clientHeight - noBtn.offsetHeight - padding;
 
       let newX, newY, tries = 0;
+
       do {
         newX = Math.random() * maxX;
         newY = Math.random() * maxY;
         tries++;
       } while (
-        tries < 10 &&
-        Math.abs(newX - noBtn.offsetLeft) < 30 &&
-        Math.abs(newY - noBtn.offsetTop) < 30
+        tries < 20 &&
+        Math.abs(newX - yesBtn.offsetLeft) < 60 &&
+        Math.abs(newY - yesBtn.offsetTop) < 60
       );
 
       noBtn.style.left = `${newX}px`;
       noBtn.style.top = `${newY}px`;
+    }
+
+    // Para escritorio
+    noBtn.addEventListener("mouseenter", moveNoButton);
+
+    // Para móvil (touch)
+    noBtn.addEventListener("touchstart", function (e) {
+      e.preventDefault(); // Evita el click accidental
+      moveNoButton();
     });
   </script>
 </body>
