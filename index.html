@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WTF Kima</title>
+  <style>
+    body {
+      background-color: #ffe6f0;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 2.2rem;
+      text-align: center;
+      margin: 0 20px 20px;
+    }
+    .btn-container {
+      display: flex;
+      gap: 20px;
+    }
+    button {
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #yes-btn {
+      background-color: #ff66b2;
+      color: white;
+      font-size: 1.4rem;
+    }
+    #no-btn {
+      background-color: #cccccc;
+      color: black;
+      position: absolute;
+    }
+    #message {
+      font-size: 1.8rem;
+      color: #ff3399;
+      margin-top: 30px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>WTF qué traes Kima 😭<br>¿Me perdonas?</h1>
+  <div class="btn-container">
+    <button id="yes-btn">Sí</button>
+    <button id="no-btn">No</button>
+  </div>
+  <div id="message"></div>
+
+  <script>
+    const noBtn = document.getElementById("no-btn");
+    const yesBtn = document.getElementById("yes-btn");
+    const message = document.getElementById("message");
+
+    yesBtn.addEventListener("click", () => {
+      message.textContent = "Sabía que me querías 💘";
+      message.style.display = "block";
+    });
+
+    noBtn.addEventListener("mouseover", () => {
+      const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+      const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+    });
+
+    noBtn.addEventListener("click", () => {
+      message.textContent = "Te doy otra oportunidad 🙄";
+      message.style.display = "block";
+    });
+  </script>
+</body>
+</html>
