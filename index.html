@@ -19,15 +19,19 @@
       overflow: hidden;
       text-align: center;
       position: relative;
+      max-width: 360px; /* ancho típico móvil */
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid #ccc; /* para ver límites */
     }
     h1 {
       font-size: 2rem;
       margin: 0 20px 20px;
     }
     .btn-container {
-      display: flex;
-      gap: 20px;
       position: relative;
+      width: 320px;
+      height: 70px; /* suficiente para un botón */
     }
     button {
       font-size: 1.2rem;
@@ -36,21 +40,25 @@
       border-radius: 10px;
       cursor: pointer;
       transition: all 0.3s ease;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      user-select: none;
+      width: 140px;
     }
     #yes-btn {
       background-color: #ff66b2;
       color: white;
-      font-size: 1.4rem;
+      left: 0;
       z-index: 1;
     }
     #no-btn {
       background-color: #cccccc;
       color: black;
-      position: absolute;
-      top: 0px;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 160px; /* justo a la derecha del botón sí (140 + 20 px espacio) */
+      z-index: 2;
     }
+    /* Resto del estilo igual que antes */
     #celebration-screen {
       display: none;
       flex-direction: column;
@@ -310,26 +318,32 @@
     passwordInput.value = "";
   });
 
-  noBtn.addEventListener("mouseover", () => {
-    const pad = 40;
-    const maxX = window.innerWidth - noBtn.offsetWidth - pad;
-    const maxY = window.innerHeight - noBtn.offsetHeight - pad;
-    let newX = Math.random() * maxX;
-    let newY = Math.random() * maxY;
-    const yesRect = yesBtn.getBoundingClientRect();
-    const noRect = noBtn.getBoundingClientRect();
+  noBtn.addEventListener("mouseenter", () => {
+    const margin = 10;
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
 
-    if (
-      newX < yesRect.right && newX + noRect.width > yesRect.left &&
-      newY < yesRect.bottom && newY + noRect.height > yesRect.top
-    ) {
-      newX = yesRect.right + 50;
-      newY = yesRect.bottom + 50;
-    }
+    // Limitar área móvil: ancho 360px, alto 640px
+    const maxX = 360 - btnWidth - margin;
+    const maxY = 640 - btnHeight - margin;
+
+    let newX, newY;
+    let tries = 0;
+
+    do {
+      newX = Math.random() * maxX;
+      newY = Math.random() * maxY;
+      tries++;
+    } while (
+      tries < 10 &&
+      Math.abs(newX - noBtn.offsetLeft) < 30 &&
+      Math.abs(newY - noBtn.offsetTop) < 30
+    );
 
     noBtn.style.left = `${newX}px`;
     noBtn.style.top = `${newY}px`;
   });
+
 </script>
 </body>
 </html>
