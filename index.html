@@ -32,17 +32,15 @@
       width: 100%;
       max-width: 320px;
       height: 300px;
-      border: 0px solid #ccc;
       overflow: hidden;
     }
 
     button {
       position: absolute;
-      padding: 10px 20px;
-      font-size: 1rem;
       border: none;
       border-radius: 10px;
       cursor: pointer;
+      font-family: inherit;
     }
 
     #yes-btn {
@@ -50,13 +48,109 @@
       color: white;
       left: 20px;
       bottom: 20px;
+      font-size: 1.2rem;
+      padding: 14px 26px;
     }
 
     #no-btn {
       background-color: #ccc;
       color: black;
+      font-size: 1rem;
+      padding: 10px 20px;
       top: 20px;
       left: 150px;
+    }
+
+    #celebration {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 100vw;
+      background-color: #fff0f5;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px;
+      z-index: 999;
+      overflow: hidden;
+    }
+
+    #celebration h2 {
+      color: #ff3399;
+      font-size: 1.8rem;
+      margin-top: 20px;
+    }
+
+    #small-text {
+      font-size: 1rem;
+      color: #aa3377;
+      margin: 10px 0 20px;
+    }
+
+    #balloons {
+      position: relative;
+      width: 100%;
+      height: 40vh;
+    }
+
+    .balloon {
+      position: absolute;
+      width: 30px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: pink;
+      animation: float 6s linear infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+      50% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-10vh);
+        opacity: 0;
+      }
+    }
+
+    #password-section {
+      text-align: center;
+    }
+
+    input[type="password"] {
+      font-size: 1rem;
+      padding: 8px;
+      border-radius: 8px;
+      border: 2px solid #ff66b2;
+      width: 200px;
+      max-width: 80vw;
+    }
+
+    #submit-password {
+      font-size: 1rem;
+      margin-left: 10px;
+      padding: 8px 12px;
+      background-color: #ff66b2;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+    }
+
+    #card {
+      margin-top: 20px;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      display: none;
+      text-align: center;
+      max-width: 90vw;
     }
   </style>
 </head>
@@ -68,9 +162,31 @@
     <button id="no-btn">No</button>
   </div>
 
+  <div id="celebration">
+    <div id="balloons"></div>
+    <h2>¡Sabía que me querías! 💘</h2>
+    <div id="small-text">Ingresa la contraseña para desbloquear una cartita muy especial.</div>
+    <div id="password-section">
+      <input type="password" id="password-input" placeholder="Contraseña" />
+      <button id="submit-password">Enviar</button>
+    </div>
+    <div id="card">
+      <h3>💌 Carta especial 💌</h3>
+      <p>Hola, ¿vemos Netflix y nos relajamos? No es cierto AJAJAJA... <br><br>
+      Solo quería decirte que de verdad no tienes ni la menor idea de cuánto me gustas, también te adoro mucho. Desde que te conocí me has dado mucho amor y alegría... <br><br>
+      No sé qué hice para merecerte y estaré contigo hasta que me eches a madrazos de tu vida... <br><br>
+      Te quiero mucho 💖</p>
+    </div>
+  </div>
+
   <script>
     const noBtn = document.getElementById("no-btn");
     const container = document.getElementById("container");
+    const yesBtn = document.getElementById("yes-btn");
+    const celebration = document.getElementById("celebration");
+    const balloons = document.getElementById("balloons");
+    const submitBtn = document.getElementById("submit-password");
+    const card = document.getElementById("card");
 
     function moveNoBtn() {
       const padding = 10;
@@ -90,6 +206,30 @@
 
     noBtn.addEventListener("mouseover", moveNoBtn);
     noBtn.addEventListener("touchstart", moveNoBtn);
+
+    yesBtn.addEventListener("click", () => {
+      document.body.innerHTML = "";
+      document.body.appendChild(celebration);
+      celebration.style.display = "flex";
+
+      for (let i = 0; i < 15; i++) {
+        const b = document.createElement("div");
+        b.className = "balloon";
+        b.style.left = `${Math.random() * 100}%`;
+        b.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 70%)`;
+        b.style.animationDelay = `${Math.random() * 3}s`;
+        balloons.appendChild(b);
+      }
+    });
+
+    submitBtn.addEventListener("click", () => {
+      const pw = document.getElementById("password-input").value.trim().toLowerCase();
+      if (pw === "mjvc") {
+        card.style.display = "block";
+      } else {
+        alert("Contraseña incorrecta 💔");
+      }
+    });
   </script>
 </body>
 </html>
