@@ -1,28 +1,335 @@
-// Posiciona el botón "No" inicialmente
-noBtn.style.top = "10px";
-noBtn.style.left = "calc(50% - 40px)"; // Centrado
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>WTF Kima</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap');
+    * { box-sizing: border-box; }
+    body {
+      background-color: #ffe6f0;
+      font-family: 'Fredoka', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+      text-align: center;
+      position: relative;
+    }
+    h1 {
+      font-size: 2rem;
+      margin: 0 20px 20px;
+    }
+    .btn-container {
+      display: flex;
+      gap: 20px;
+      position: relative;
+    }
+    button {
+      font-size: 1.2rem;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    #yes-btn {
+      background-color: #ff66b2;
+      color: white;
+      font-size: 1.4rem;
+      z-index: 1;
+    }
+    #no-btn {
+      background-color: #cccccc;
+      color: black;
+      position: absolute;
+      top: 0px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    #celebration-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      width: 100vw;
+      background-color: #fff0f5;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 999;
+      padding: 20px;
+      overflow: hidden;
+    }
+    #celebration-message {
+      font-size: 2rem;
+      color: #ff3399;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+    #small-text {
+      font-size: 1rem;
+      color: #aa3377;
+      margin-bottom: 20px;
+    }
+    #balloons-container {
+      position: relative;
+      height: 50vh;
+      width: 100%;
+      overflow: visible;
+    }
+    .balloon {
+      width: 30px;
+      height: 40px;
+      background-color: #ff69b4;
+      border-radius: 50%;
+      position: absolute;
+      animation: float 6s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+    #fireworks-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 50vh;
+      pointer-events: none;
+    }
+    #password-section {
+      margin-top: 20px;
+    }
+    #password-input {
+      font-size: 1.2rem;
+      padding: 8px;
+      border-radius: 8px;
+      border: 2px solid #ff66b2;
+      width: 250px;
+      max-width: 90vw;
+    }
+    #submit-password {
+      font-size: 1.2rem;
+      margin-left: 10px;
+      padding: 8px 15px;
+      background-color: #ff66b2;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #submit-password:hover {
+      background-color: #e0559e;
+    }
+    #card {
+      display: none;
+      background-color: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      max-width: 300px;
+      text-align: center;
+      margin-top: 30px;
+    }
+    #blocked-message {
+      color: #aa2255;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>WTF qué traes Kima 😭<br>¿Me perdonas?</h1>
+  <div class="btn-container">
+    <button id="yes-btn">Sí</button>
+    <button id="no-btn">No</button>
+  </div>
 
-let noMoved = false;
+  <div id="celebration-screen">
+    <div id="balloons-container"></div>
+    <canvas id="fireworks-canvas"></canvas>
+    <div id="celebration-message">¡Sabía que me querías! 💘</div>
+    <div id="small-text">Ingresa la contraseña para desbloquear una cartita muy especial.</div>
 
-noBtn.addEventListener("mouseover", () => {
-  if (!noMoved) {
-    noMoved = true;
+    <div id="password-section">
+      <input type="password" id="password-input" placeholder="Contraseña secreta" autocomplete="off" />
+      <button id="submit-password">Enviar</button>
+    </div>
+
+    <div id="card">
+      <h2>Mi cartita para ti 💌</h2>
+      <p>Hola, ¿vemos Netflix y nos relajamos? No es cierto AJAJAJA... <br>
+      Solo quería decirte que de verdad no tienes ni la menor idea de cuánto me gustas, también te adoro mucho. <br>
+      Desde que te conocí me has dado mucho amor y alegría... <br>
+      No sé qué hice para merecerte y estaré contigo hasta que me eches a madrazos de tu vida... <br>
+      Te quiero mucho.</p>
+    </div>
+
+    <div id="blocked-message" style="display:none;">
+      Lo siento, agotaste tus intentos. Intenta de nuevo en 2 horas.
+    </div>
+  </div>
+
+<script>
+  const yesBtn = document.getElementById("yes-btn");
+  const noBtn = document.getElementById("no-btn");
+  const celebrationScreen = document.getElementById("celebration-screen");
+  const balloonsContainer = document.getElementById("balloons-container");
+  const fireworksCanvas = document.getElementById("fireworks-canvas");
+  const ctx = fireworksCanvas.getContext("2d");
+  const passwordInput = document.getElementById("password-input");
+  const submitPassword = document.getElementById("submit-password");
+  const card = document.getElementById("card");
+  const blockedMessage = document.getElementById("blocked-message");
+
+  // Fireworks
+  class Firework {
+    constructor(x, y, color) {
+      this.particles = [];
+      for(let i=0; i<30; i++) {
+        const angle = (Math.PI*2/30)*i;
+        const speed = Math.random() * 4 + 2;
+        this.particles.push({
+          x, y,
+          vx: Math.cos(angle)*speed,
+          vy: Math.sin(angle)*speed,
+          alpha: 1,
+          radius: 2 + Math.random()*2,
+          color
+        });
+      }
+    }
+    update() {
+      this.particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= 0.02;
+      });
+    }
+    draw(ctx) {
+      this.particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
+        ctx.fill();
+      });
+    }
+    isDead() {
+      return this.particles.every(p => p.alpha <= 0);
+    }
   }
 
-  const padding = 40;
-  const yesRect = yesBtn.getBoundingClientRect();
-  let x, y, overlap;
+  let fireworks = [];
 
-  do {
-    x = Math.random() * (window.innerWidth - noBtn.offsetWidth - padding);
-    y = Math.random() * (window.innerHeight - noBtn.offsetHeight - padding - 30);
-    overlap = !(x + noBtn.offsetWidth < yesRect.left ||
-                x > yesRect.right ||
-                y + noBtn.offsetHeight < yesRect.top ||
-                y > yesRect.bottom);
-  } while (overlap);
+  function launchFirework() {
+    const x = Math.random() * fireworksCanvas.width;
+    const y = Math.random() * fireworksCanvas.height * 0.7;
+    const color = `${Math.random()*255},${Math.random()*100},${Math.random()*255}`;
+    fireworks.push(new Firework(x, y, color));
+  }
 
-  noBtn.style.position = "absolute";
-  noBtn.style.left = `${x}px`;
-  noBtn.style.top = `${y}px`;
-});
+  function animate() {
+    ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+    fireworks.forEach((fw, i) => {
+      fw.update();
+      fw.draw(ctx);
+      if (fw.isDead()) fireworks.splice(i, 1);
+    });
+    requestAnimationFrame(animate);
+  }
+
+  function createBalloon() {
+    const b = document.createElement("div");
+    b.className = "balloon";
+    b.style.left = Math.random() * 100 + "vw";
+    b.style.backgroundColor = `hsl(${Math.random()*360}, 70%, 70%)`;
+    b.style.animationDelay = Math.random() * 3 + "s";
+    balloonsContainer.appendChild(b);
+    setTimeout(() => b.remove(), 6000);
+  }
+
+  function startCelebration() {
+    for (let i = 0; i < 15; i++) setTimeout(createBalloon, i * 400);
+    animate();
+  }
+
+  // Password
+  let attempts = 0;
+  const correctPassword = "120605051003";
+
+  function isBlocked() {
+    const until = localStorage.getItem('blockedUntil');
+    return until && new Date().getTime() < parseInt(until);
+  }
+
+  function blockFor2Hours() {
+    localStorage.setItem('blockedUntil', new Date().getTime() + 2 * 3600000);
+  }
+
+  yesBtn.addEventListener("click", () => {
+    if (isBlocked()) {
+      alert("Intenta de nuevo en 2 horas.");
+      return;
+    }
+    document.body.innerHTML = "";
+    document.body.appendChild(celebrationScreen);
+    celebrationScreen.style.display = "flex";
+    startCelebration();
+  });
+
+  submitPassword.addEventListener("click", () => {
+    if (isBlocked()) {
+      blockedMessage.style.display = "block";
+      return;
+    }
+    if (passwordInput.value === correctPassword) {
+      card.style.display = "block";
+      submitPassword.disabled = true;
+      passwordInput.disabled = true;
+    } else {
+      attempts++;
+      if (attempts >= 3) {
+        blockFor2Hours();
+        blockedMessage.style.display = "block";
+        submitPassword.disabled = true;
+        passwordInput.disabled = true;
+        alert("Agotaste tus intentos.");
+      } else {
+        alert(`Contraseña incorrecta. Te quedan ${3 - attempts} intento(s).`);
+      }
+    }
+    passwordInput.value = "";
+  });
+
+  noBtn.addEventListener("mouseover", () => {
+    const pad = 40;
+    const maxX = window.innerWidth - noBtn.offsetWidth - pad;
+    const maxY = window.innerHeight - noBtn.offsetHeight - pad;
+    let newX = Math.random() * maxX;
+    let newY = Math.random() * maxY;
+    const yesRect = yesBtn.getBoundingClientRect();
+    const noRect = noBtn.getBoundingClientRect();
+
+    if (
+      newX < yesRect.right && newX + noRect.width > yesRect.left &&
+      newY < yesRect.bottom && newY + noRect.height > yesRect.top
+    ) {
+      newX = yesRect.right + 50;
+      newY = yesRect.bottom + 50;
+    }
+
+    noBtn.style.left = `${newX}px`;
+    noBtn.style.top = `${newY}px`;
+  });
+</script>
+</body>
+</html>
